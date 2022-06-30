@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  {% block title %}Compounds List{% endblock %}
+{% endblock %}
+
+{% block content %}
+  {% for compound in compounds %}
+    <div class="cards">
+      <span><b>Name:</b> {{ compound['name'] }}</span>
+      <p><b>Formula:</b> {{ compound['formula'] }}</p>
+      <p><b>Inchi:</b> {{ compound['inchi'] }}</p>
+      <p><b>Inchi_Key:</b> {{ compound['inchi_key'] }}</p>
+      <p><b>Smiles:</b> {{ compound['smiles'] }}</p>
+      <p><b>Cross Links Count:</b> {{ compound['cross_links_count'] }}</p>
+    </div>
+  {% endfor %}
+{% endblock content %}
