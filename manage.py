@@ -1,4 +1,3 @@
-from flask import render_template
 from flask.cli import FlaskGroup
 from time import sleep
 import requests
