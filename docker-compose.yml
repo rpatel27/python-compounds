@@ -10,20 +10,20 @@ services:
     ports:
       - 5000:5000
     env_file:
-      - ./.env.dev
+      - ./.env.web
     depends_on:
       - db
   db:
     container_name: postgres
-    image: postgres:14-alpine
+    image: postgres:14.4-alpine
     expose:
       - "5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_USER=rioran
-      - POSTGRES_PASSWORD=rioran
-      - POSTGRES_DB=rio_lists_db
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=compounds_db
 
 volumes:
   postgres_data:
