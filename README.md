@@ -38,6 +38,16 @@ OR
 $ docker-compose exec web python manage.py list_compounds
 ```
 
+### To test the get_compounds CLI function:
+```Linux Kernel Module
+$ docker exec -it {CONTAINER_ID} pytest
+```
+
+OR
+
+```Linux Kernel Module
+$ docker-compose exec web pytest
+```
 ## Flask:
 The Flask app is running at http://127.0.0.1:5000 <br>
 Once the data is loaded into database table, the above URL also shows untruncated data.
