@@ -15,16 +15,20 @@ cli = FlaskGroup(app)
 def get_compounds(compound_name):
     """Get all compounds from API calls in compounds table"""
 
+    compound_list = [
+        'ADP', 'ATP', 'STI', 'ZID',
+        'DPM', 'XP9', '18W', '29P',
+    ]
+
     if (compound_name == ''):
         print('Empty compound name is provided')
         return
     elif (compound_name is not None):
-        compound_list = [compound_name]
-    else:
-        compound_list = [
-            'ADP', 'ATP', 'STI', 'ZID',
-            'DPM', 'XP9', '18W', '29P',
-        ]
+        if compound_name in compound_list:
+            compound_list = [compound_name]
+        else:
+            print('Incorrect compound name is provided: {}'.format(compound_name))
+            return
 
     # Drop and recreate the compounds table
     db.drop_all()
@@ -35,11 +39,11 @@ def get_compounds(compound_name):
 
     # Set the basic config for log handler
     logging.basicConfig(
-            filename='compounds.log',
-            filemode='w',
-            format='%(asctime)s - %(message)s',
-            level=logging.INFO
-        )
+        filename='compounds.log',
+        filemode='w',
+        format='%(asctime)s - %(message)s',
+        level=logging.INFO
+    )
 
     for compound in compound_list:
         response = requests.get(api_url + compound)
@@ -60,11 +64,29 @@ def get_compounds(compound_name):
 
             db.session.add(compound_item)
         else:
-            print('Incorrect compound name is provided for API call: {}'.format(compound))
+            print('Incorrect compound name is provided: {}'.format(compound))
 
         sleep(1)
     
     db.session.commit()
+    return
+
+
+def trim_str(val_str: str) -> str:
+    """
+    Trim the string to 10 chars
+    if its length is more than 13 chars
+
+    parameters:
+        val_str: string value to be trimmed
+
+    Returns:
+        trimmed string if length is more than 13 chars
+        original string if length is less than 13 chars
+    """
+
+    return val_str[:10] + '...' \
+        if len(val_str) > 13 else val_str
 
 
 @cli.command('list_compounds')
@@ -72,37 +94,25 @@ def list_compounds():
     """List all compounds from compounds table"""
 
     compounds = Compound.query.order_by(Compound.id.asc()).all()
-    head = ['ID', 'Name', 'Formula', 'Inchi', 'Inchi_Key', 'Smiles', 'Cross_Links_Count']
+    head = [
+        'ID', 'Name', 'Formula', 'Inchi',
+        'Inchi_Key', 'Smiles', 'Cross_Links_Count'
+    ]
     compound_list = []
 
     for compound in compounds:
-        name_trimmed = compound.name[:10] + '...' \
-            if len(compound.name) > 13 \
-            else compound.name
-
-        formula_trimmed = compound.formula[:10] + '...' \
-            if len(compound.formula) > 13 \
-            else compound.formula
-
-        inchi_trimmed = compound.inchi[:10] + '...' \
-            if len(compound.inchi) > 13 \
-            else compound.inchi
-
-        inchi_key_trimmed = compound.inchi_key[:10] + '...' \
-            if len(compound.inchi_key) > 13 \
-            else compound.inchi_key
-
-        smiles_trimmed = compound.smiles[:10] + '...' \
-            if len(compound.smiles) > 13 \
-            else compound.smiles
-
         compound_list.append([
-                compound.id, name_trimmed, formula_trimmed,
-                inchi_trimmed, inchi_key_trimmed, 
-                smiles_trimmed, compound.cross_links_count,
-            ])
+            compound.id,
+            trim_str(compound.name),
+            trim_str(compound.formula),
+            trim_str(compound.inchi),
+            trim_str(compound.inchi_key),
+            trim_str(compound.smiles),
+            compound.cross_links_count,
+        ])
 
     print(tabulate(compound_list, headers=head, tablefmt='grid'))
+    return
 
 
 if __name__ == "__main__":
