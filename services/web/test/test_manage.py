@@ -2,7 +2,7 @@ from flask import Flask
 import click
 
 #from compounds import app, db
-from manage import get_compounds
+from services.web.manage import get_compounds
 
 app = Flask(__name__)
 

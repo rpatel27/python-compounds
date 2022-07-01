@@ -5,6 +5,7 @@ import requests
 import json
 import logging
 import click
+from tabulate import tabulate
 
 from compounds import app, db, Compound
 
@@ -72,9 +73,37 @@ def list_compounds():
     """List all compounds from compounds table"""
 
     compounds = Compound.query.order_by(Compound.id.asc()).all()
+    head = ['ID', 'Name', 'Formula', 'Inchi', 'Inchi_Key', 'Smiles', 'Cross_Links_Count']
+    compound_list = []
 
     for compound in compounds:
-        print(compound)
+        name_trimmed = compound.name[:10] + '...' \
+            if len(compound.name) > 13 \
+            else compound.name
+
+        formula_trimmed = compound.formula[:10] + '...' \
+            if len(compound.formula) > 13 \
+            else compound.formula
+
+        inchi_trimmed = compound.inchi[:10] + '...' \
+            if len(compound.inchi) > 13 \
+            else compound.inchi
+
+        inchi_key_trimmed = compound.inchi_key[:10] + '...' \
+            if len(compound.inchi_key) > 13 \
+            else compound.inchi_key
+
+        smiles_trimmed = compound.smiles[:10] + '...' \
+            if len(compound.smiles) > 13 \
+            else compound.smiles
+
+        compound_list.append([
+                compound.id, name_trimmed, formula_trimmed,
+                inchi_trimmed, inchi_key_trimmed, 
+                smiles_trimmed, compound.cross_links_count,
+            ])
+
+    print(tabulate(compound_list, headers=head, tablefmt='grid'))
 
 
 if __name__ == "__main__":
