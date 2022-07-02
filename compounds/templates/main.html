@@ -7,7 +7,8 @@
 {% block content %}
   {% for compound in compounds %}
     <div class="cards">
-      <span><b>Name:</b> {{ compound['name'] }}</span>
+      <span><b>Compound:</b> {{ compound['compound_name'] }}</span>
+      <p><b>Name:</b> {{ compound['name'] }}</p>
       <p><b>Formula:</b> {{ compound['formula'] }}</p>
       <p><b>Inchi:</b> {{ compound['inchi'] }}</p>
       <p><b>Inchi_Key:</b> {{ compound['inchi_key'] }}</p>

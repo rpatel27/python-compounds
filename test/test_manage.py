@@ -7,7 +7,7 @@ def test_get_compounds_valid_name():
     runner = app.test_cli_runner()
 
     result = runner.invoke(get_compounds, ['--compound_name', 'ZID'])
-    assert 'ISONICOTINIC-ACETYL-NICOTINAMIDE-ADENINE DINUCLEOTIDE' in result.output
+    assert 'ZID' in result.output
 
 
 def test_get_compounds_invalid_name():

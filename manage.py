@@ -37,17 +37,17 @@ def get_compounds(compound_name):
 
     api_url = 'https://www.ebi.ac.uk/pdbe/graph-api/compound/summary/'
 
-    # Set the basic config for log handler
-    logging.basicConfig(
-        filename='compounds.log',
-        filemode='w',
-        format='%(asctime)s - %(message)s',
-        level=logging.INFO
-    )
-
+    # Set the file handler for logging
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(levelname)s: %(asctime)s - %(message)s')
+    file_handler = logging.FileHandler('compounds.log')
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+    
     for compound in compound_list:
         response = requests.get(api_url + compound)
-        logging.info('An API call is made to: {}'.format(api_url + compound))
+        logger.info('An API call is made to: {}'.format(api_url + compound))
 
         if response.status_code == 200:
             json_data = json.loads(response.text)
@@ -56,10 +56,10 @@ def get_compounds(compound_name):
             inchi = json_data[compound][0]['inchi']
             inchi_key = json_data[compound][0]['inchi_key']
             smiles = json_data[compound][0]['smiles']
-            cross_links = json_data[compound][0]['cross_links']
+            cross_links_count = len(json_data[compound][0]['cross_links'])
 
             compound_item = Compound(
-                name, formula, inchi, inchi_key, smiles, cross_links
+                compound, name, formula, inchi, inchi_key, smiles, cross_links_count
             )
 
             db.session.add(compound_item)
@@ -95,7 +95,7 @@ def list_compounds():
 
     compounds = Compound.query.order_by(Compound.id.asc()).all()
     head = [
-        'ID', 'Name', 'Formula', 'Inchi',
+        'ID', 'Compound', 'Name', 'Formula', 'Inchi',
         'Inchi_Key', 'Smiles', 'Cross_Links_Count'
     ]
     compound_list = []
@@ -103,6 +103,7 @@ def list_compounds():
     for compound in compounds:
         compound_list.append([
             compound.id,
+            compound.compound_name,
             trim_str(compound.name),
             trim_str(compound.formula),
             trim_str(compound.inchi),

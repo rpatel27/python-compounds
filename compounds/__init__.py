@@ -14,4 +14,7 @@ def staticfiles(filename):
 
 @app.route('/', methods=["GET"])
 def main_page():
-    return render_template("main.html", compounds=Compound.query.all())
+    return render_template(
+        "main.html",
+        compounds=Compound.query.order_by(Compound.id.asc()).all()
+    )

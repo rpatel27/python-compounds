@@ -2,8 +2,7 @@
 Web service to get compounds data thur API calls and store them into local database.
 
 ## Docker Deployment:
-
-### To deploy docker containers, run this from project's root:
+To create and start containers, run this from project's root:
 ```Linux Kernel Module
 $ docker-compose up -d --build
 ```
@@ -48,13 +47,14 @@ OR
 ```Linux Kernel Module
 $ docker-compose exec web pytest
 ```
+
 ## Flask:
 The Flask app is running at http://127.0.0.1:5000 <br>
-Once the data is loaded into database table, the above URL also shows untruncated data.
+Once the data is loaded into the database table, the above URL shows untruncated compounds data.
 <br><br>
 
 ## Turn off Docker containers: 
-Run this from project's root:
+To stop and remove containers, run this from project's root:
 ```Linux Kernel Module
 docker-compose down -v
 ```
