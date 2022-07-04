@@ -63,6 +63,7 @@ def get_compounds(compound_name):
             )
 
             db.session.add(compound_item)
+            print(f'Compound {compound} is added.')
         else:
             print('Incorrect compound name is provided: {}'.format(compound))
 

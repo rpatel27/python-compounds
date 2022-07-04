@@ -27,4 +27,3 @@ class Compound(db.Model):
         self.inchi_key = inchi_key
         self.smiles = smiles
         self.cross_links_count = cross_links_count
-        print(f'Compound {self.compound_name} is added.')
