@@ -27,7 +27,7 @@ def get_compounds(compound_name):
         if compound_name in compound_list:
             compound_list = [compound_name]
         else:
-            print('Incorrect compound name is provided: {}'.format(compound_name))
+            print(f'Incorrect compound name is provided: {compound_name}')
             return
 
     # Drop and recreate the compounds table
