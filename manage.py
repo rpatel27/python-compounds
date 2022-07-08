@@ -50,16 +50,17 @@ def get_compounds(compound_name):
         logger.info('An API call is made to: {}'.format(api_url + compound))
 
         if response.status_code == 200:
-            json_data = json.loads(response.text)
-            name = json_data[compound][0]['name']
-            formula = json_data[compound][0]['formula']
-            inchi = json_data[compound][0]['inchi']
-            inchi_key = json_data[compound][0]['inchi_key']
-            smiles = json_data[compound][0]['smiles']
-            cross_links_count = len(json_data[compound][0]['cross_links'])
+            json_data = json.loads(response.text)[compound][0]
+            name = json_data['name']
+            formula = json_data['formula']
+            inchi = json_data['inchi']
+            inchi_key = json_data['inchi_key']
+            smiles = json_data['smiles']
+            cross_links_count = len(json_data['cross_links'])
 
             compound_item = Compound(
-                compound, name, formula, inchi, inchi_key, smiles, cross_links_count
+                compound, name, formula, inchi,
+                inchi_key, smiles, cross_links_count
             )
 
             db.session.add(compound_item)
@@ -70,7 +71,6 @@ def get_compounds(compound_name):
         sleep(1)
     
     db.session.commit()
-    return
 
 
 def trim_str(val_str: str) -> str:
@@ -78,7 +78,7 @@ def trim_str(val_str: str) -> str:
     Trim the string to 10 chars
     if its length is more than 13 chars
 
-    parameters:
+    Args:
         val_str: string value to be trimmed
 
     Returns:
@@ -114,7 +114,6 @@ def list_compounds():
         ])
 
     print(tabulate(compound_list, headers=head, tablefmt='grid'))
-    return
 
 
 if __name__ == "__main__":
